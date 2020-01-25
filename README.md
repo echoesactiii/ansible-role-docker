@@ -1,6 +1,6 @@
 # ansible-role-docker
 
-This is a simple ansible role for setting up docker on a host. It supports [the firewalld hack](https://unix.stackexchange.com/questions/199966/how-to-configure-centos-7-firewalld-to-allow-docker-containers-free-access-to-th) for docker as well.
+This is a simple ansible role for setting up docker on a CentOS7 host. It supports [the firewalld hack](https://unix.stackexchange.com/questions/199966/how-to-configure-centos-7-firewalld-to-allow-docker-containers-free-access-to-th) for docker as well.
 
 ## Vars & defaults
 
