@@ -1,0 +1,10 @@
+---
+docker_admin_users:
+  - username: root
+docker_yum_dependencies:
+  - python-setuptools
+  - python-pip
+  - docker-compose
+docker_pip_dependencies:
+  - docker
+docker_firewalld: true

@@ -1,0 +1,48 @@
+---
+- name: Add docker yum repo
+  yum_repository: name=docker description="Docker YUM Repo for CentOS7" baseurl=https://download.docker.com/linux/centos/7/$basearch/stable gpgkey=https://download.docker.com/linux/centos/gpg gpgcheck=yes
+
+- name: Remove docker chain in firewalld
+  shell:  firewall-cmd --permanent --direct --remove-chain ipv4 filter DOCKER-USER
+  ignore_errors: yes
+  when: docker_firewalld == true
+
+- name: Remove docker rules in firewalld
+  shell: firewall-cmd --permanent --direct --remove-rules ipv4 filter DOCKER-USER
+  ignore_errors: yes
+  when: docker_firewalld == true
+
+- name: Setup docker chain in firewalld
+  shell: firewall-cmd --permanent --direct --add-chain ipv4 filter DOCKER-USER
+  when: docker_firewalld == true
+
+- name: Install docker
+  yum: name="docker-ce" state=present
+
+- name: (Re)start docker
+  systemd: name=docker state=restarted enabled=yes
+
+- name: Install dependencies
+  yum:
+    name: "{{ docker_yum_dependencies }}"
+    state: present
+  tags:
+    - yum
+
+- name: Install dependencies
+  pip:
+    name: "{{ docker_pip_dependencies }}"
+    state: present
+  tags:
+    - pip
+
+- name: Create docker group
+  group: name=docker state=present
+  tags:
+    - permissions
+
+- name: Add admin users to docker group
+  user: append=yes name="{{ item.username }}" groups=docker
+  with_items: "{{ docker_admin_users }}"
+  tags:
+    - permissions
